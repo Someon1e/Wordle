@@ -126,83 +126,85 @@ class MainActivity : AppCompatActivity() {
                 if (stopInputs) {
                     return@setOnClickListener
                 }
-                if (inputLen == wordLength) {
-                    if (key == '?') {
-                        // not valid word
-                        if (!wordsOfLength.contains(inputString.joinToString(separator = ""))) {
-                            Toast.makeText(this, "that's not a word, idiot", Toast.LENGTH_SHORT).show()
+                if (key == '?') {
+                    if (inputLen != wordLength) {
+                        return@setOnClickListener
+                    }
+                    // not valid word
+                    if (!wordsOfLength.contains(inputString.joinToString(separator = ""))) {
+                        Toast.makeText(this, "that's not a word, idiot", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+
+                    for (i in 0 until rowNum) {
+                        if (inputStrings[i].contentEquals(inputString)) {
+                            // Already entered
+                            Toast.makeText(
+                                this,
+                                "you already said that",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             return@setOnClickListener
                         }
+                    }
 
-                        for (i in 0 until rowNum) {
-                            if (inputStrings[i].contentEquals(inputString)) {
-                                // Already entered
-                                Toast.makeText(
-                                    this,
-                                    "you already said that",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                return@setOnClickListener
-                            }
-                        }
+                    var allCorrect = true
+                    for (i in 0 until wordLength) {
+                        val guess = inputString[i]
+                        val correctCharacter = chosenWord[i]
 
-                        var allCorrect = true
-                        for (i in 0 until wordLength) {
-                            val guess = inputString[i]
-                            val correctCharacter = chosenWord[i]
-
-                            if (guess == correctCharacter) {
+                        if (guess == correctCharacter) {
+                            inputLabels[i].backgroundTintList =
+                                getColorStateList(R.color.green)
+                            keyToButton[guess]?.backgroundTintList = getColorStateList(R.color.green)
+                        } else {
+                            allCorrect = false
+                            if (chosenWord.contains(guess)) {
                                 inputLabels[i].backgroundTintList =
-                                    getColorStateList(R.color.green)
-                                keyToButton[guess]?.backgroundTintList = getColorStateList(R.color.green)
+                                    getColorStateList(R.color.orange)
+                                if (keyToButton[guess]?.backgroundTintList != getColorStateList(R.color.green)) {
+                                    keyToButton[guess]?.backgroundTintList = getColorStateList(R.color.orange)
+                                }
                             } else {
-                                allCorrect = false
-                                if (chosenWord.contains(guess)) {
-                                    inputLabels[i].backgroundTintList =
-                                        getColorStateList(R.color.orange)
-                                    if (keyToButton[guess]?.backgroundTintList != getColorStateList(R.color.green)) {
-                                        keyToButton[guess]?.backgroundTintList = getColorStateList(R.color.orange)
-                                    }
-                                } else {
-                                    if (keyToButton[guess]?.backgroundTintList == getColorStateList(R.color.grey)) {
-                                        keyToButton[guess]?.backgroundTintList = getColorStateList(R.color.black)
-                                    }
+                                if (keyToButton[guess]?.backgroundTintList == getColorStateList(R.color.grey)) {
+                                    keyToButton[guess]?.backgroundTintList = getColorStateList(R.color.black)
                                 }
                             }
                         }
-
-                        if (allCorrect) {
-                            // Won
-                            stopInputs = true
-                            Toast.makeText(this, "wow", Toast.LENGTH_LONG).show()
-                            Timer().schedule(5000) {
-                                newGame()
-                                stopInputs = false
-                            }
-                            return@setOnClickListener
-                        }
-
-                        if (rowNum + 1 == maxGuesses) {
-                            // Out of guesses
-                            stopInputs = true
-                            Toast.makeText(
-                                this,
-                                "you're so bad, it was $chosenWord",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            Timer().schedule(5000) {
-                                newGame()
-                                stopInputs = false
-                            }
-                            return@setOnClickListener
-                        }
-
-                        // New row
-                        rowNum += 1
-                        inputString = inputStrings[rowNum]
-                        inputLen = 0
-                        inputLabels = inputLabelsList[rowNum]
                     }
+
+                    if (allCorrect) {
+                        // Won
+                        stopInputs = true
+                        Toast.makeText(this, "wow", Toast.LENGTH_LONG).show()
+                        Timer().schedule(5000) {
+                            newGame()
+                            stopInputs = false
+                        }
+                        return@setOnClickListener
+                    }
+
+                    if (rowNum + 1 == maxGuesses) {
+                        // Out of guesses
+                        stopInputs = true
+                        Toast.makeText(
+                            this,
+                            "you're so bad, it was $chosenWord",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Timer().schedule(5000) {
+                            newGame()
+                            stopInputs = false
+                        }
+                        return@setOnClickListener
+                    }
+
+                    // New row
+                    rowNum += 1
+                    inputString = inputStrings[rowNum]
+                    inputLen = 0
+                    inputLabels = inputLabelsList[rowNum]
+
                 } else if (key == '>') {
                     if (inputLen != 0) {
                         inputLen -= 1
