@@ -212,6 +212,9 @@ class MainActivity : AppCompatActivity() {
                         inputString[inputLen] = '\u0000'
                     }
                 } else {
+                    if (inputLen == wordLength) {
+                        return@setOnClickListener
+                    }
                     inputLabels[inputLen].text = key.uppercase()
                     inputString[inputLen] = key
                     inputLen += 1
