@@ -240,6 +240,24 @@ class MainActivity : AppCompatActivity() {
             maxGuessesLabel.text = value.toInt().toString()
         }
 
+        val wordsFile = File(applicationContext.filesDir, "words.txt")
+        if (wordsFile.exists()) {
+            words = wordsFile.readLines()
+        } else {
+            // download string of line-break-separated English words
+            Executors.newSingleThreadExecutor().submit(Callable {
+                val connection = URL("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt").openConnection()
+                connection.connect()
+                val inputStream = connection.getInputStream()
+                val outputStream = wordsFile.outputStream()
+                inputStream.copyTo(outputStream)
+                inputStream.close()
+                outputStream.close()
+
+                words = wordsFile.readLines()
+            }).get()
+        }
+        
         val playButton = findViewById<Button>(R.id.play)
         playButton.setOnClickListener {
             val wordLength = wordLengthBar.value.toInt()
@@ -268,24 +286,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val wordsFile = File(applicationContext.filesDir, "words.txt")
-        if (wordsFile.exists()) {
-            words = wordsFile.readLines()
-            menu()
-        } else {
-            // download string of line-break-separated English words
-            Executors.newSingleThreadExecutor().submit(Callable {
-                val connection = URL("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt").openConnection()
-                connection.connect()
-                val inputStream = connection.getInputStream()
-                val outputStream = wordsFile.outputStream()
-                inputStream.copyTo(outputStream)
-                inputStream.close()
-                outputStream.close()
-
-                words = wordsFile.readLines()
-                menu()
-            }).get()
-        }
+        menu()
     }
 }
