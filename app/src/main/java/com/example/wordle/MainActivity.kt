@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             row.gravity = Gravity.CENTER
-            row.setPadding(0, 0 ,0 ,0)
+            row.setPadding(0, 0, 0, 0)
             for (character in keys) {
                 val key = Button(this)
                 key.backgroundTintList = getColorStateList(R.color.grey)
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 key.setTextColor(getColorStateList(R.color.textColor))
                 key.textSize = 34f
                 key.textAlignment = Button.TEXT_ALIGNMENT_CENTER
-                key.setPadding(0, 0 ,0 ,0)
+                key.setPadding(0, 0, 0, 0)
                 key.layoutParams = LinearLayout.LayoutParams(
                     105,
                     160
