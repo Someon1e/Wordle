@@ -109,8 +109,7 @@ class MainActivity : AppCompatActivity() {
             for (list in inputStrings) {
                 list.fill('\u0000')
             }
-            for (keyInfo in keyToButton) {
-                val button = keyInfo.value
+            for (button in keyToButton.values) {
                 button.backgroundTintList = getColorStateList(R.color.grey)
             }
             rowNum = 0
