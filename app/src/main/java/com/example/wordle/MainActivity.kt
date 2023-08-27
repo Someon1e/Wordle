@@ -148,6 +148,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     var allCorrect = true
+
                     for (i in 0 until wordLength) {
                         val guess = inputString[i]
                         val correctCharacter = chosenWord[i]
@@ -155,18 +156,22 @@ class MainActivity : AppCompatActivity() {
                         if (guess == correctCharacter) {
                             inputLabels[i].backgroundTintList =
                                 getColorStateList(R.color.green)
-                            keyToButton[guess]?.backgroundTintList = getColorStateList(R.color.green)
+                            keyToButton[guess]!!.backgroundTintList = getColorStateList(R.color.green)
                         } else {
                             allCorrect = false
                             if (chosenWord.contains(guess)) {
                                 inputLabels[i].backgroundTintList =
                                     getColorStateList(R.color.orange)
-                                if (keyToButton[guess]?.backgroundTintList != getColorStateList(R.color.green)) {
-                                    keyToButton[guess]?.backgroundTintList = getColorStateList(R.color.orange)
+                                keyToButton[guess]!!.let {
+                                    if (it.backgroundTintList != getColorStateList(R.color.green)) {
+                                        it.backgroundTintList = getColorStateList(R.color.orange)
+                                    }
                                 }
                             } else {
-                                if (keyToButton[guess]?.backgroundTintList == getColorStateList(R.color.grey)) {
-                                    keyToButton[guess]?.backgroundTintList = getColorStateList(R.color.black)
+                                keyToButton[guess]!!.let {
+                                    if (it.backgroundTintList == getColorStateList(R.color.grey)) {
+                                        it.backgroundTintList = getColorStateList(R.color.black)
+                                    }
                                 }
                             }
                         }
